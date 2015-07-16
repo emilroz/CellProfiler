@@ -122,6 +122,7 @@ See also the <b>Metadata</b> and legacy <b>LoadData</b> modules.
 # Website: http://www.cellprofiler.org
 
 import numpy as np
+import csv
 import scipy.optimize
 import os
 
@@ -814,21 +815,53 @@ def write_figures(prefix, directory, dose_name,
     
     if log_transform:
         dose_data = np.log(dose_data)
+    save_to_file_data = []
+    save_to_file_data.append([])
+    save_to_file_data[0].append("Dose")
+    counter = 1
+    for value in dose_data:
+        save_to_file_data.append([])
+        save_to_file_data[counter].append(value)
+        counter += 1
+    
+    save_to_file_data_interoplated = []
+    interpolate_x = 100
+    x = np.linspace(0, np.max(dose_data), num=interpolate_x)
+    save_to_file_data_interoplated.append([])
+    save_to_file_data_interoplated[0].append("Dose")
+    counter = 1
+    for value in x:
+        save_to_file_data_interoplated.append([])
+        save_to_file_data_interoplated[counter].append(value)
+        counter += 1
+    
     for i, (object_name, feature_name) in enumerate(feature_set):
         fdata = data[:,i]
         fcoeffs = ec50_coeffs[i,:]
-        filename = "%s%s_%s.pdf"%(prefix, object_name, feature_name)
-        pathname = os.path.join(directory, filename)
-        f = Figure()
-        canvas = FigureCanvasPdf(f)
-        ax = f.add_subplot(1,1,1)
-        x = np.linspace(0, np.max(dose_data), num=100)
+        x = np.linspace(0, np.max(dose_data), num=interpolate_x)
         y = sigmoid(fcoeffs, x)
-        ax.plot(x, y)
         dose_y = sigmoid(fcoeffs, dose_data)
-        ax.plot(dose_data, dose_y, "o")
-        ax.set_xlabel('Dose')
-        ax.set_ylabel('Response')
-        ax.set_title('%s_%s'%(object_name, feature_name))
-        f.savefig(pathname)
-        
+        save_to_file_data[0].append(object_name + "_" + feature_name)
+        counter = 1
+        for value in dose_y:
+            save_to_file_data[counter].append(value)
+            counter += 1
+        counter = 1
+        save_to_file_data_interoplated[0].append(object_name + "_" + feature_name)
+        for value in y:
+            save_to_file_data_interoplated[counter].append(value)
+            counter += 1
+    file_name = "dose_reponse_plot_%s.csv" % dose_name
+    file_path =  os.path.join(directory, file_name)
+    mfile = open(file_path, 'wb')
+    wr = csv.writer(mfile)
+    for row in save_to_file_data:
+        wr.writerow(row)
+    mfile.close()
+    file_name = "dose_reponse_plot_%s_interpolated.csv" % dose_name
+    file_path =  os.path.join(directory, file_name)
+    mfile = open(file_path, 'wb')
+    wr = csv.writer(mfile)
+    for row in save_to_file_data_interoplated:
+        wr.writerow(row)
+    mfile.close()
