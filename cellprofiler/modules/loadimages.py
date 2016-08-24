@@ -3139,6 +3139,7 @@ class LoadImagesImageProviderBase(cpimage.AbstractImageProvider):
         if self.is_matlab_file():
             rdr = None
         else:
+            logger.info("get_md5_hash requesting reader")
             from bioformats.formatreader import get_image_reader
             rdr = get_image_reader(None, url = self.get_url())
         if rdr is None or not hasattr(rdr, "md5_hash"):
@@ -3158,7 +3159,14 @@ class LoadImagesImageProviderBase(cpimage.AbstractImageProvider):
             if rdr is None:
                 return hasher.hexdigest()
             rdr.md5_hash = hasher.hexdigest()
-        return rdr.md5_hash
+        md5_hash = rdr.md5_hash
+        try:
+            logging.root.info("Closing image readers")
+            from bioformats.formatreader import clear_image_reader_cache
+            clear_image_reader_cache()
+        except:
+            logging.root.warn("Failed to clear bioformats cache", exc_info=1)
+        return md5_hash
 
     def release_memory(self):
         '''Release any image memory
