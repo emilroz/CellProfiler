@@ -3066,6 +3066,7 @@ class LoadImagesImageProviderBase(cpimage.AbstractImageProvider):
         if self.__cacheing_tried:
             return self.__is_cached
         self.__cacheing_tried = True
+        return False
         #
         # Check to see if the pathname can be accessed as a directory
         # If so, handle normally
@@ -3106,6 +3107,7 @@ class LoadImagesImageProviderBase(cpimage.AbstractImageProvider):
             finally:
                 os.close(tempfd)
         else:
+            logger.info("cache_file reader request")
             from bioformats.formatreader import get_image_reader
             rdr = get_image_reader(id(self), url=url)
             self.__cached_file = rdr.path
@@ -3207,7 +3209,7 @@ class LoadImagesImageProvider(LoadImagesImageProviderBase):
         """
         logger.info("Providing image")
         from bioformats.formatreader import get_image_reader
-        self.cache_file()
+        # self.cache_file()
         filename = self.get_filename()
         channel_names = []
         if isinstance(self.rescale, float):
