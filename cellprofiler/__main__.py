@@ -268,6 +268,12 @@ def stop_cellprofiler():
     except:
         logging.root.warn("Failed to stop zmq boundary", exc_info=1)
     try:
+        logging.root.info("Trying to clear bioformats cache")
+        from bioformats.formatreader import clear_image_reader_cache
+        clear_image_reader_cache()
+    except:
+        logging.root.warn("Failed to clear bioformats cache", exc_info=1)
+    try:
         from cellprofiler.utilities.cpjvm import cp_stop_vm
         cp_stop_vm()
     except:
