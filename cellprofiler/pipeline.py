@@ -1888,7 +1888,12 @@ class Pipeline(object):
                         measurements.add_experiment_measurement(EXIT_STATUS,
                                                                 "Failure")
                         return
-
+                try:
+                    logging.root.info("Trying to clear bioformats cache")
+                    from bioformats.formatreader import clear_image_reader_cache
+                    clear_image_reader_cache()
+                except:
+                    logging.root.warn("Failed to clear bioformats cache", exc_info=1)
             if measurements is not None:
                 workspace = cpw.Workspace(
                     self, None, None, None, measurements, image_set_list, frame)
