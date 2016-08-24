@@ -3162,6 +3162,7 @@ class LoadImagesImageProviderBase(cpimage.AbstractImageProvider):
                 return hasher.hexdigest()
             rdr.md5_hash = hasher.hexdigest()
         md5_hash = rdr.md5_hash
+        rdr.close()
         try:
             logging.root.info("Closing image readers")
             from bioformats.formatreader import clear_image_reader_cache
@@ -3270,6 +3271,7 @@ class LoadImagesImageProvider(LoadImagesImageProviderBase):
                               scale = self.scale)
         if img.ndim == 3 and len(channel_names) == img.shape[2]:
             image.channel_names = list(channel_names)
+        rdr.close()
         try:
             logging.root.info("Closing image readers")
             from bioformats.formatreader import clear_image_reader_cache
