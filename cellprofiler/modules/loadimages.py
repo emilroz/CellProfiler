@@ -3197,6 +3197,7 @@ class LoadImagesImageProvider(LoadImagesImageProviderBase):
     def provide_image(self, image_set):
         """Load an image from a pathname
         """
+        logger.info("Providing image")
         from bioformats.formatreader import get_image_reader
         self.cache_file()
         filename = self.get_filename()
@@ -3259,6 +3260,12 @@ class LoadImagesImageProvider(LoadImagesImageProviderBase):
                               scale = self.scale)
         if img.ndim == 3 and len(channel_names) == img.shape[2]:
             image.channel_names = list(channel_names)
+        try:
+            logging.root.info("Closing image readers")
+            from bioformats.formatreader import clear_image_reader_cache
+            clear_image_reader_cache()
+        except:
+            logging.root.warn("Failed to clear bioformats cache", exc_info=1)
         return image
 
 class LoadImagesImageProviderURL(LoadImagesImageProvider):
