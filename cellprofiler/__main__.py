@@ -15,6 +15,8 @@ OMERO_CK_PASSWORD = "password"
 OMERO_CK_SESSION_ID = "session-id"
 OMERO_CK_CONFIG_FILE = "config-file"
 
+LOGGING_FORMAT = "%(asctime)s %(levelname)-7s [%(name)16s] %(message)s"
+
 if sys.platform.startswith('win'):
     # This recipe is largely from zmq which seems to need this magic
     # in order to import in frozen mode - a topic the developers never
@@ -524,6 +526,7 @@ def parse_args(args):
 
 def set_log_level(options):
     '''Set the logging package's log level based on command-line options'''
+    logging.basicConfig(format=LOGGING_FORMAT, stream=sys.stdout)
     try:
         if options.log_level.isdigit():
             logging.root.setLevel(int(options.log_level))
