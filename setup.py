@@ -426,7 +426,7 @@ setuptools.setup(
     include_package_data=True,
     install_requires=[
         "cellh5",
-        "centrosome>=1.0.4",
+        "centrosome==1.0.5",
         "h5py",
         "inflect",
         "javabridge",
