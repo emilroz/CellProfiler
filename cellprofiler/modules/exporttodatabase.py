@@ -3197,10 +3197,10 @@ OPTIONALLY ENCLOSED BY '"' ESCAPED BY '\\\\';
             # The experiment table
             #
             ###########################################
-            stmt = "UPDATE %s SET %s='%s'" % \
-                   (self.get_table_name(cellprofiler.measurement.EXPERIMENT),
-                    cellprofiler.pipeline.M_MODIFICATION_TIMESTAMP,
-                    datetime.datetime.now().isoformat())
+            stmt = "UPDATE %s SET %s='%s'" %\
+                (self.get_table_name(cpmeas.EXPERIMENT),
+                 M_MODIFICATION_TIMESTAMP,
+                 datetime.datetime.now().isoformat())
             execute(self.cursor, stmt, return_result=False)
 
             self.connection.commit()
