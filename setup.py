@@ -79,7 +79,7 @@ setuptools.setup(
         "prokaryote==2.4.2",
         "python-bioformats==4.0.0",
         "python-javabridge==4.0.0",
-        "pyzmq==18.1.0",
+        "pyzmq==18.0.1",
         "sentry-sdk==0.18.0",
         "requests==2.22",
         "scikit-image==0.18.1",
